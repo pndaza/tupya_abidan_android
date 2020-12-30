@@ -1,0 +1,15 @@
+<p></p>
+<p><a href="https://my.wikipedia.org/wiki/ဖျာပုံတိုက်သစ်ဆရာတော်">ဖျာပုံတိုက်သစ်ဆရာတော်</> အရှင်ဩဘာသာဘိဝံသ ရေးသားတော်မူသော <a href="https://my.wikipedia.org/wiki/သုတေသနသရုပ်ပြအဘိဓာန်">သုတေသနသရုပ်ပြအဘိဓာန်</a> ဖြစ်ပါသည်။</p>
+<p></p>
+<p>ယခုဆော့ဝဲလ်၏ အချက်အလက်များကို ဒကာဌေးလင်းရေးသားထားသော ဆော့ဝဲလ်အဟောင်းမှ ရယူပါသည်။ </p>
+<p></p>
+<p><center><strong>Libraries</center></strong></p>
+<ul>
+<li><a href="https://github.com/Rabbit-Converter/Rabbit">Rabbit Converter</a></li>
+<li><a href="https://github.com/dev-myatminsoe/MDetect">MDetect</a></li>
+<li><a href="https://github.com/timusus/RecyclerView-FastScroll">FastScroller for Android's RecyclerView</a></li>
+<li><a href="https://github.com/SufficientlySecure/html-textview">HtmlTextView</a></li>
+</ul>
+<p>&#8239</p>
+<p>&#8239</p>
+<center>Developed by <a href="https://m.facebook.com/pndaza.mlm">Pn Daza</strong></a><em>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Tupya Abidan</string>
+    <string name="app_name_mm">သုတေသန သရုပ်ပြ အဘိဓာန်</string>
+    <string name="title_home">Home</string>
+    <string name="title_favourite">Favourites</string>
+    <string name="title_favourite_mm">စိတ်ကြိုက်မှတ်သားမှုများ</string>
+    <string name="title_recent">Recent</string>
+    <string name="title_recent_mm">လက်တလော ကြည့်ရှုမှုများ</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_setting_mm">ပြင်ဆင်မွမ်းမံမှုများ</string>
+    <string name="title_info">Info</string>
+    <string name="title_info_mm">သိကောင်းစရာများ</string>
+    <string name="empty_favourite">စိတ်ကြိုက်သိမ်းဆည်းထားသော သရုပ်များ မရှိသေးပါ။</string>
+    <string name="empty_recent">လက်တလော ကြည့်ရှုထားသော သရုပ်များ မရှိသေးပါ။</string>
+    <string name="title_detail">သရုပ်ဖော်ပြချက်</string>
+
+    // setting
+    <string name="fontSize">စာလုံးအရွယ်အစား</string>
+    <string name="fontSizeSmall">အသေး</string>
+    <string name="fontSizeNormal">အလတ်</string>
+    <string name="fontSizeLarge">အကြီး</string>
+    <string name="themeTitle">အရောင်အသွင်အပြင်</string>
+    <string name="themeDay">နေ့ (နောက်ခံအဖြူ စာလုံးမဲ)</string>
+    <string name="themeNight">ည (နောက်ခံအမဲ စာလုံးဖြူ)</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "mm.pndaza.thupyadictionary",
+  "variantName": "processReleaseResources",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 4,
+      "versionName": "01-01-2021",
+      "outputFile": "app-release.apk"
+    }
+  ]
+}
