@@ -73,17 +73,17 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void copyToClipboard(){
+    private void copyToClipboard() {
         String textToCopy = tv_detail.getText().toString();
-        ClipboardManager clipboard= (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("copy", textToCopy);
         clipboard.setPrimaryClip(clip);
-        Snackbar.make(tv_detail,MDetect.getDeviceEncodedText("ကော်ပီကူးယူပြီးပါပြီ"), Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tv_detail, MDetect.getDeviceEncodedText("ကော်ပီကူးယူပြီးပါပြီ"), Snackbar.LENGTH_SHORT).show();
 
     }
 
-    private void manageFavourites(MenuItem item){
-        if(isFavouriteExist(word.getId())){
+    private void manageFavourites(MenuItem item) {
+        if (isFavouriteExist(word.getId())) {
             removeFromFavourite(word.getId());
             item.setIcon(R.drawable.ic_add_to_favourite);
         } else {
@@ -92,31 +92,31 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isFavouriteExist(int id){
+    private boolean isFavouriteExist(int id) {
         return DBOpenHelper.getInstance(this).isFavouriteExist(id);
     }
 
     private void addToFavourite(int id) {
         DBOpenHelper.getInstance(this).addToFavourite(id);
-        Snackbar.make(tv_detail,MDetect.getDeviceEncodedText("စိတ်ကြိုက်စာရင်းသို့ ထည့်လိုက်ပါပြီ။"), Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tv_detail, MDetect.getDeviceEncodedText("စိတ်ကြိုက်စာရင်းသို့ ထည့်လိုက်ပါပြီ။"), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void removeFromFavourite(int id){
+    private void removeFromFavourite(int id) {
         DBOpenHelper.getInstance(this).removeFromFavourite(id);
-        Snackbar.make(tv_detail,MDetect.getDeviceEncodedText("စိတ်ကြိုက်စာရင်းမှ ပယ်ဖျက်လိုက်ပါပြီ"), Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tv_detail, MDetect.getDeviceEncodedText("စိတ်ကြိုက်စာရင်းမှ ပယ်ဖျက်လိုက်ပါပြီ"), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void setIcon(MenuItem item){
-        item.setIcon(isFavouriteExist(word.getId())? R.drawable.ic_added_favorite : R.drawable.ic_add_to_favourite);
+    private void setIcon(MenuItem item) {
+        item.setIcon(isFavouriteExist(word.getId()) ? R.drawable.ic_added_favorite : R.drawable.ic_add_to_favourite);
     }
 
-    private void manageRecent(int id){
-        if(!isRecentExist(id)){
+    private void manageRecent(int id) {
+        if (!isRecentExist(id)) {
             addToRecent(id);
         }
     }
 
-    private boolean isRecentExist(int id){
+    private boolean isRecentExist(int id) {
         return DBOpenHelper.getInstance(this).isRecentExist(id);
     }
 

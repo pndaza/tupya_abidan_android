@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
-
-import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,8 +29,11 @@ public class InfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        HtmlTextView htmlTextView = view.findViewById(R.id.tv_info);
-        htmlTextView.setHtml(MDetect.getDeviceEncodedText(getInfo()));
+        TextView textView = view.findViewById(R.id.tv_info);
+        String htmlContent = MDetect.getDeviceEncodedText(getInfo());
+//        markwon.setMarkdown(textView, htmlContent);
+        textView.setText(HtmlCompat.fromHtml(htmlContent, HtmlCompat.FROM_HTML_MODE_LEGACY));
+//        textView.setText(htmlContent);
     }
 
     private String getInfo() {
