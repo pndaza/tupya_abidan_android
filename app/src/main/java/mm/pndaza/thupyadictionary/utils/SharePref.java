@@ -3,6 +3,8 @@ package mm.pndaza.thupyadictionary.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import mm.pndaza.thupyadictionary.Constants;
+
 public class SharePref {
 
     private static final String PREF_FILENAME = "setting";
@@ -40,21 +42,24 @@ public class SharePref {
     }
 
     public int getPrefFontSize(){
-        String fontSizeInText = sharedPreferences.getString(PREF_FONT_SIZE, "normal");
-        int fontSize = 18;
-        if(fontSizeInText.equals("small")){
-            fontSize = 16;
-        } else if ( fontSizeInText.equals("large")){
-            fontSize = 22;
-        } else {
-            fontSize = 18;
+        String fontSizeInText = sharedPreferences.getString(PREF_FONT_SIZE, Constants.FONT_SIZE_NORMAL);
+        int fontSize = 18; // normal - default
+        switch (fontSizeInText) {
+            case Constants.FONT_SIZE_SMALL:
+                fontSize = 16;
+                break;
+            case Constants.FONT_SIZE_LARGE:
+                fontSize = 22;
+                break;
+            case Constants.FONT_SIZE_EXTRA_LARGE:
+                fontSize = 26;
+                break;
         }
         return fontSize;
     }
 
     public String getPrefFontSizeInText(){
-        String fontSize = sharedPreferences.getString(PREF_FONT_SIZE, "normal");
-        return fontSize;
+        return sharedPreferences.getString(PREF_FONT_SIZE, Constants.FONT_SIZE_NORMAL);
     }
 
     public void setPrefNightModeState(boolean state){
@@ -63,8 +68,7 @@ public class SharePref {
     }
 
     public boolean getPrefNightModeState(){
-        Boolean state = sharedPreferences.getBoolean(PREF_NIGHT_MODE, false);
-        return state;
+        return sharedPreferences.getBoolean(PREF_NIGHT_MODE, false);
     }
 
     public void setDbCopyState(boolean state){
@@ -87,7 +91,7 @@ public class SharePref {
     public void saveDefault(){
         editor.putBoolean(PREF_FIRST_TIME, false);
         editor.putBoolean(PREF_DB_COPY, false);
-        editor.putString(PREF_FONT_SIZE, "normal");
+        editor.putString(PREF_FONT_SIZE, Constants.FONT_SIZE_NORMAL);
         editor.putBoolean(PREF_NIGHT_MODE, false);
         editor.apply();
     }

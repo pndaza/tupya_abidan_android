@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
+import mm.pndaza.thupyadictionary.Constants;
 import mm.pndaza.thupyadictionary.R;
 import mm.pndaza.thupyadictionary.utils.MDetect;
 import mm.pndaza.thupyadictionary.utils.Rabbit;
@@ -22,9 +23,10 @@ import mm.pndaza.thupyadictionary.utils.SharePref;
 
 public class SettingFragment extends Fragment {
 
-    private static final String FONT_SIZE_SMALL = "small";
-    private static final String FONT_SIZE_NORMAL = "normal";
-    private static final String FONT_SIZE_LARGE = "large";
+//    private static final String FONT_SIZE_SMALL = "small";
+//    private static final String FONT_SIZE_NORMAL = "normal";
+//    private static final String FONT_SIZE_LARGE = "large";
+//    private static final String FONT_SIZE_EXTRA_LARGE = "extraLarge";
 
     private OnSettingChangeListener onSettingChangeListener;
 
@@ -68,12 +70,20 @@ public class SettingFragment extends Fragment {
         String fontSize = sharePref.getPrefFontSizeInText();
         boolean nightModeState = sharePref.getPrefNightModeState();
         //
-        if (fontSize.equals(FONT_SIZE_SMALL))
-            radioGroupFontSize.check(R.id.radio_font_small);
-        else if (fontSize.equals(FONT_SIZE_NORMAL))
-            radioGroupFontSize.check(R.id.radio_font_normal);
-        else if (fontSize.equals(FONT_SIZE_LARGE))
-            radioGroupFontSize.check(R.id.radio_font_large);
+        switch (fontSize) {
+            case Constants.FONT_SIZE_SMALL:
+                radioGroupFontSize.check(R.id.radio_font_small);
+                break;
+            case Constants.FONT_SIZE_EXTRA_LARGE:
+                radioGroupFontSize.check(R.id.radio_font_extra_large);
+                break;
+            case Constants.FONT_SIZE_LARGE:
+                radioGroupFontSize.check(R.id.radio_font_large);
+                break;
+            default:
+                radioGroupFontSize.check(R.id.radio_font_normal);
+                break;
+        }
         //
         if(nightModeState){
             radioGroupTheme.check(R.id.radio_theme_night);
@@ -87,31 +97,36 @@ public class SettingFragment extends Fragment {
         SharePref sharePref = SharePref.getInstance(this.getContext());
         switch (checkedId){
             case R.id.radio_font_small:
-                sharePref.setPrefFontSize(FONT_SIZE_SMALL);
+                sharePref.setPrefFontSize(Constants.FONT_SIZE_SMALL);
                 break;
             case R.id.radio_font_normal:
-                sharePref.setPrefFontSize(FONT_SIZE_NORMAL);
+                sharePref.setPrefFontSize(Constants.FONT_SIZE_NORMAL);
                 break;
             case R.id.radio_font_large:
-                sharePref.setPrefFontSize(FONT_SIZE_LARGE);
+                sharePref.setPrefFontSize(Constants.FONT_SIZE_LARGE);
+                break;
+            case R.id.radio_font_extra_large:
+                sharePref.setPrefFontSize(Constants.FONT_SIZE_EXTRA_LARGE);
                 break;
             case R.id.radio_theme_day:
                 sharePref.setPrefNightModeState(false);
+                setTheme(false);
                 break;
             case R.id.radio_theme_night:
                 sharePref.setPrefNightModeState(true);
+                setTheme(true);
                 break;
         }
         onSettingChangeListener.onChangeListener();
     }
 
-/*    private void setTheme(boolean nightState){
+   private void setTheme(boolean nightState){
         if (nightState) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-    }*/
+    }
 
     private void initViewTextEncoding(View view){
         TextView tvFontSizeTitle = view.findViewById(R.id.tv_fontSizeTitle);

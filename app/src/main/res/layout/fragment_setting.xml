@@ -28,19 +28,26 @@
                 android:id="@+id/radio_font_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
                 android:text="@string/fontSizeSmall" />
-
             <RadioButton
                 android:id="@+id/radio_font_normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:text="@string/fontSizeNormal" />
-
             <RadioButton
                 android:id="@+id/radio_font_large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="22sp"
                 android:text="@string/fontSizeLarge" />
+            <RadioButton
+                android:id="@+id/radio_font_extra_large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:text="@string/fontSizeExtraLarge" />
 
         </RadioGroup>
 
