@@ -11,7 +11,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="?android:attr/windowBackground">
+        android:background="?android:attr/windowBackground" >
 
         <EditText
             android:id="@+id/search"
@@ -51,8 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/search_bar"
-        >
+        app:layout_constraintBottom_toTopOf="@+id/search_bar">
         <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
             android:id="@+id/wordListView"
             android:layout_width="match_parent"
@@ -73,8 +72,5 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:textSize="22sp" />
-
     </FrameLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,22 +61,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnWo
         navView.setOnNavigationItemSelectedListener(item -> {
 
             Fragment selectedFragment = null;
-            switch ((item.getItemId())) {
-                case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
-                    break;
-                case R.id.navigation_favourite:
-                    selectedFragment = new FavouriteFragment();
-                    break;
-                case R.id.navigation_recent:
-                    selectedFragment = new RecentFragment();
-                    break;
-                case R.id.navigation_setting:
-                    selectedFragment = new SettingFragment();
-                    break;
-                case R.id.navigation_info:
-                    selectedFragment = new InfoFragment();
-                    break;
+            if (item.getItemId() == R.id.navigation_home) {
+                selectedFragment = new HomeFragment();
+            } else if (item.getItemId() == R.id.navigation_favourite) {
+                selectedFragment = new FavouriteFragment();
+            } else if (item.getItemId() == R.id.navigation_recent) {
+                selectedFragment = new RecentFragment();
+            } else if (item.getItemId() == R.id.navigation_setting) {
+                selectedFragment = new SettingFragment();
+            } else if (item.getItemId() == R.id.navigation_info) {
+                selectedFragment = new InfoFragment();
             }
             openFragment(selectedFragment);
             return true;
