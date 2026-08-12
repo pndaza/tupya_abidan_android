@@ -7,7 +7,7 @@ import android.os.Parcelable;
 public class Word implements Parcelable {
     private int id;
     private String word;
-    private String detail;
+    private String detail = "";
 
     public Word(int id, String word) {
         this.id = id;
@@ -18,6 +18,9 @@ public class Word implements Parcelable {
         id = in.readInt();
         word = in.readString();
         detail = in.readString();
+        if (detail == null) {
+            detail = "";
+        }
     }
 
     public static final Creator<Word> CREATOR = new Creator<Word>() {

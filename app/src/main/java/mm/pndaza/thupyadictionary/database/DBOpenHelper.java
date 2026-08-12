@@ -47,22 +47,27 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public String getWord(int id) {
         String word = "";
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT word FROM words WHERE rowid = " + id, null);
+        Cursor cursor = getReadableDatabase()
+                .rawQuery("SELECT word FROM words WHERE rowid = ?", new String[]{String.valueOf(id)});
         if (cursor != null && cursor.moveToFirst()) {
-            word = cursor.getString(cursor.getColumnIndex("word"));
+            word = cursor.getString(cursor.getColumnIndexOrThrow("word"));
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return word;
     }
 
     public String getDetail(int rowid) {
         String detail = "";
         Cursor cursor = getReadableDatabase()
-                .rawQuery("SELECT detail FROM words WHERE rowid = " + rowid, null);
+                .rawQuery("SELECT detail FROM words WHERE rowid = ?", new String[]{String.valueOf(rowid)});
         if (cursor != null && cursor.moveToFirst()) {
-            detail = cursor.getString(cursor.getColumnIndex("detail"));
+            detail = cursor.getString(cursor.getColumnIndexOrThrow("detail"));
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return detail;
     }
 
@@ -88,14 +93,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public boolean isFavouriteExist(int id) {
         Cursor cursor = this.getReadableDatabase().rawQuery
-                ("SELECT id FROM favourites Where id = " + id, null);
+                ("SELECT id FROM favourites Where id = ?", new String[]{String.valueOf(id)});
+        boolean exists = false;
         if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                return true;
-            }
+            exists = cursor.moveToFirst();
             cursor.close();
         }
-        return false;
+        return exists;
     }
 
     public void addToFavourite(int id) {
@@ -134,14 +138,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public boolean isRecentExist(int id) {
         Cursor cursor = this.getReadableDatabase().rawQuery
-                ("SELECT id FROM recent Where id = " + id, null);
+                ("SELECT id FROM recent Where id = ?", new String[]{String.valueOf(id)});
+        boolean exists = false;
         if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                return true;
-            }
+            exists = cursor.moveToFirst();
             cursor.close();
         }
-        return false;
+        return exists;
     }
 
     public void addToRecent(int id) {

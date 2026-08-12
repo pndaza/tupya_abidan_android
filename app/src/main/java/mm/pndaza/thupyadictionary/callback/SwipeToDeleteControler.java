@@ -48,6 +48,10 @@ public class SwipeToDeleteControler extends ItemTouchHelper.SimpleCallback {
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
+        if (icon == null) {
+            return;
+        }
+
         View itemView = viewHolder.itemView;
         int backgroundCornerOffset = 20; //so background is behind the rounded corners of itemView
 

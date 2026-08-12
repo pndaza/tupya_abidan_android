@@ -79,7 +79,11 @@ implements FastScrollRecyclerView.SectionedAdapter {
         String filterInDeviceEncoding = MDetect.getDeviceEncodedText(filterText);
 
         SpannableString highlightedText = new SpannableString(wordInDeviceEncoding);
-        int start_index = word.indexOf(filterInDeviceEncoding);
+        int start_index = wordInDeviceEncoding.indexOf(filterInDeviceEncoding);
+        if (start_index < 0) {
+            // filter not found in encoded form (e.g. encoding changed positions)
+            return highlightedText;
+        }
         int end_index = start_index + filterInDeviceEncoding.length();
 
         highlightedText.setSpan(

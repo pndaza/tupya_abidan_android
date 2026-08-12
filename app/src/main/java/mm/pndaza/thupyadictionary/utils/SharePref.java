@@ -86,6 +86,7 @@ public class SharePref {
 
     public void setDatabaseVersion(int version){
         editor.putInt(PREF_DB_VERSION, version);
+        editor.apply();
     }
 
     public void saveDefault(){

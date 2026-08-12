@@ -2,9 +2,9 @@ package mm.pndaza.thupyadictionary.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mm.pndaza.thupyadictionary.R;
 import mm.pndaza.thupyadictionary.utils.SharePref;
@@ -25,8 +27,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String DATABASE_PATH = "databases";
     private static final String DATABASE_FILENAME = "words.db";
+    private static final int ASSET_DB_VERSION = 1;
     private String SAVED_PATH;
     private Context context;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -55,7 +60,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
 
-        if (isDatabaseExist() && sharePref.isDatabaseCopied()) {
+        if (isDatabaseExist() && sharePref.isDatabaseCopied()
+                && sharePref.getDatabaseVersion() == ASSET_DB_VERSION) {
             startMainActivity();
         } else {
             setupDatabase();
@@ -68,65 +74,78 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void setupDatabase() {
-
-        new CopyDBAsync().execute();
+        executor.execute(this::copyDatabase);
     }
 
-    public class CopyDBAsync extends AsyncTask<Void, Void, Void> {
+    private void copyDatabase() {
+        boolean success = false;
 
+        File path = new File(SAVED_PATH + "/" + DATABASE_PATH );
+        // check database folder is exist and if not, make folder.
+        if (!path.exists()) {
+            path.mkdirs();
+        }
 
-        protected Void doInBackground(Void... voids) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            inputStream = getAssets()
+                    .open(DATABASE_PATH + "/" + DATABASE_FILENAME);
+            outputStream = new FileOutputStream(
+                    SAVED_PATH + "/" + DATABASE_PATH + "/" + DATABASE_FILENAME);
 
-            File path = new File(SAVED_PATH + "/" + DATABASE_PATH );
-            // check database folder is exist and if not, make folder.
-            if (!path.exists()) {
-                path.mkdirs();
+            byte[] buffer = new byte[1024];
+            int length;
+            while (( length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
             }
-
+            outputStream.flush();
+            success = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        } finally {
             try {
-                InputStream inputStream = getAssets()
-                        .open(DATABASE_PATH + "/" + DATABASE_FILENAME);
-                OutputStream outputStream = new FileOutputStream(
-                        SAVED_PATH + "/" + DATABASE_PATH + "/" + DATABASE_FILENAME);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while (( length = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, length);
+                if (inputStream != null) {
+                    inputStream.close();
                 }
-
-                inputStream.close();
-                outputStream.flush();
-                outputStream.close();
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch (IOException e2) {
-                e2.printStackTrace();
             }
-
-            return null;
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
+        if (success) {
             SharePref.getInstance(context).setDbCopyState(true);
-            startMainActivity();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+            SharePref.getInstance(context).setDatabaseVersion(ASSET_DB_VERSION);
+            mainHandler.post(this::startMainActivity);
+        } else {
+            // DB copy failed — don't proceed to MainActivity with a corrupt/missing DB.
+            mainHandler.post(this::finish);
         }
     }
 
     private void startMainActivity() {
 
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             finish();
             SplashScreenActivity.this.startActivity(intent);
         }, 1000);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdownNow();
     }
 
 }

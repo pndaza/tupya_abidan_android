@@ -2,8 +2,9 @@ package mm.pndaza.thupyadictionary.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mm.pndaza.thupyadictionary.R;
 import mm.pndaza.thupyadictionary.adapters.WordAdapter;
@@ -40,6 +44,8 @@ public class HomeFragment extends Fragment implements WordAdapter.OnItemClickLis
     private TextView tv_empty_info;
 
     private static final String TAG = "HomeFragment";
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -57,7 +63,7 @@ public class HomeFragment extends Fragment implements WordAdapter.OnItemClickLis
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
 
-        new LoadWords().execute();
+        loadWords();
 
         tv_empty_info = view.findViewById(R.id.empty_info);
         final EditText searchInput = view.findViewById(R.id.search);
@@ -95,40 +101,50 @@ public class HomeFragment extends Fragment implements WordAdapter.OnItemClickLis
         }
     }
 
-    public class LoadWords extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            int count = 0;
-            Cursor cursor = DBOpenHelper.getInstance(getContext()).getWords();
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndex("rowid"));
-                    String word = cursor.getString(cursor.getColumnIndex("word"));
-                    words.add(new Word(id, word));
-                    if( words.size() + 10 > count){
-                        count = words.size();
-                        publishProgress();
-                    }
-                } while (cursor.moveToNext());
-
+    private void loadWords() {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        executor.execute(() -> {
+            Cursor cursor = null;
+            try {
+                int count = 0;
+                cursor = DBOpenHelper.getInstance(context).getWords();
+                if (cursor != null && cursor.moveToFirst()) {
+                    do {
+                        int id = cursor.getInt(cursor.getColumnIndexOrThrow("rowid"));
+                        String word = cursor.getString(cursor.getColumnIndexOrThrow("word"));
+                        synchronized (words) {
+                            words.add(new Word(id, word));
+                            if (words.size() + 10 > count) {
+                                count = words.size();
+                                mainHandler.post(() -> {
+                                    synchronized (words) {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
-            cursor.close();
-            return null;
-        }
+            mainHandler.post(() -> {
+                synchronized (words) {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        });
+    }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            adapter.notifyDataSetChanged();
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        executor.shutdownNow();
     }
 
     @Override
@@ -144,15 +160,19 @@ public class HomeFragment extends Fragment implements WordAdapter.OnItemClickLis
     private void doFilter(String filter) {
         filterWords.clear();
         if (filter.isEmpty()) {
-            adapter.setFilteredWordList(words);
+            synchronized (words) {
+                adapter.setFilteredWordList(words);
+            }
             adapter.setFilterText("");
         } else {
             if(!MDetect.isUnicode()){
                 filter = Rabbit.zg2uni(filter);
             }
-            for (Word word : words) {
-                if (word.getWord().contains(filter)) {
-                    filterWords.add(word);
+            synchronized (words) {
+                for (Word word : words) {
+                    if (word.getWord().contains(filter)) {
+                        filterWords.add(word);
+                    }
                 }
             }
             adapter.setFilteredWordList(filterWords);

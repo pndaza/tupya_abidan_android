@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 
 import mm.pndaza.thupyadictionary.R;
@@ -29,11 +31,13 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         MDetect.init(this);
-        setTitle(MDetect.getDeviceEncodedText(getString(R.string.title_detail)));
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setUpToolBar(MDetect.getDeviceEncodedText(getString(R.string.title_detail)));
 
         word = getIntent().getParcelableExtra("word");
+        if (word == null) {
+            finish();
+            return;
+        }
         tv_detail = findViewById(R.id.tv_detail);
         tv_detail.setText(MDetect.getDeviceEncodedText(word.getDetail()));
         tv_detail.setTextSize(SharePref.getInstance(this).getPrefFontSize());
@@ -61,15 +65,24 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_copy:
-                copyToClipboard();
-                return true;
-            case R.id.menu_favourite:
-                manageFavourites(item);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == R.id.menu_copy) {
+            copyToClipboard();
+            return true;
+        } else if (id == R.id.menu_favourite) {
+            manageFavourites(item);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpToolBar(String title) {
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIconTint(ResourcesCompat.getColor(getResources(), R.color.color_on_primary, null));
+        toolbar.setTitle(MDetect.getDeviceEncodedText(title));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

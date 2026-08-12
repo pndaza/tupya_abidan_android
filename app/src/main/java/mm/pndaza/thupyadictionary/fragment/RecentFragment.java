@@ -36,8 +36,7 @@ public class RecentFragment extends Fragment implements RecentAdapter.OnRecentIt
     }
 
     private OnRecentCallbackListener callbackListener;
-    final private ArrayList<Recent> recents =
-            DBOpenHelper.getInstance(getContext()).getAllRecents();
+    private ArrayList<Recent> recents;
     private RecentAdapter adapter;
     private TextView tv_empty_info;
     private Context context;
@@ -56,6 +55,7 @@ public class RecentFragment extends Fragment implements RecentAdapter.OnRecentIt
         super.onViewCreated(view, savedInstanceState);
 
         context = view.getContext();
+        recents = DBOpenHelper.getInstance(getContext()).getAllRecents();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new RecentAdapter(recents, this);
